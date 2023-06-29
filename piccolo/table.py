@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import os
 import inspect
 import itertools
 import types
@@ -252,6 +253,11 @@ class Table(metaclass=TableMetaclass):
         if tags is None:
             tags = []
         tablename = tablename or _camel_to_snake(cls.__name__)
+        PROJECT_NAME = os.environ.get("PROJECT_NAME")
+        if PROJECT_NAME:
+            PROJECT_NAME = _camel_to_snake(PROJECT_NAME)
+            if not tablename.startswith(PROJECT_NAME):
+                tablename = PROJECT_NAME+"_" + tablename
 
         if "." in tablename:
             warnings.warn(
